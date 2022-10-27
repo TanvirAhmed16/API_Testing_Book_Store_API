@@ -1,0 +1,707 @@
+{
+	"info": {
+		"_postman_id": "a2aefb72-9158-45cd-9aa9-b1597a3d921b",
+		"name": "BookStoreAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23772265"
+	},
+	"item": [
+		{
+			"name": "User Account",
+			"item": [
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"base_url\", \"https://bookstore.toolsqa.com\");\r",
+									"//pm.collectionVariables.set(\"userName\", \"variable_value\");\r",
+									"pm.collectionVariables.set(\"U_Password\", \"Tanv!r12\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"U_Id\", response.userID);\r",
+									"pm.collectionVariables.set(\"U_Name\", response.username);\r",
+									"\r",
+									"let newUserName = response.username;\r",
+									"let newUserId = response.userID;\r",
+									"\r",
+									"pm.test(\"Validating UserId\", response.userId) == newUserId;\r",
+									"pm.test(\"Validating UserNmae\", response.userId) == newUserName;\r",
+									"\r",
+									"// pm.test(\"User Id & User Name\", function () {\r",
+									"//     pm.expect(response.userId).to.eql(newUserId);\r",
+									"//     pm.expect(response.username).to.eql(newUserName);\r",
+									"//   });\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"{{$randomUserName}}\",\r\n  \"password\": \"{{U_Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Account/v1/User",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Account",
+								"v1",
+								"User"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"pm.collectionVariables.set(\"U_Token\", response.token);\r",
+									"\r",
+									"pm.test(\"Validating Status & Result\", function () {\r",
+									"    pm.expect(response.status).to.eql(\"Success\");\r",
+									"    pm.expect(response.result).to.eql(\"User authorized successfully.\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"{{U_Name}}\",\r\n  \"password\": \"{{U_Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Account/v1/GenerateToken",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Account",
+								"v1",
+								"GenerateToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Authorization",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response Body Should Contain true\", () => {\r",
+									"    pm.expect(pm.response.text()).eql(\"true\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"{{U_Name}}\",\r\n  \"password\": \"{{U_Password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/Account/v1/Authorized",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Account",
+								"v1",
+								"Authorized"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"pm.test(\"Validating UserId\", response.userId) == \"{{U_Id}}\";\r",
+									"pm.test(\"Validating UserNmae\", response.userId) == \"{{U_Name}}\";\r",
+									"\r",
+									"// let userBook1 = (response.books[0].isbn)\r",
+									"// let userBook2 = (response.books[1].isbn)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{U_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Account/v1/User/{{U_Id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Account",
+								"v1",
+								"User",
+								"{{U_Id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Get All Books",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"pm.test(\"Validating Books ISBN\", function () {\r",
+									"    pm.expect(response.books[0].isbn).to.eql(\"9781449325862\");\r",
+									"    pm.expect(response.books[1].isbn).to.eql(\"9781449331818\");\r",
+									"    pm.expect(response.books[2].isbn).to.eql(\"9781449337711\");\r",
+									"    pm.expect(response.books[3].isbn).to.eql(\"9781449365035\");\r",
+									"    pm.expect(response.books[4].isbn).to.eql(\"9781491904244\");\r",
+									"    pm.expect(response.books[5].isbn).to.eql(\"9781491950296\");\r",
+									"    pm.expect(response.books[6].isbn).to.eql(\"9781593275846\");\r",
+									"    pm.expect(response.books[7].isbn).to.eql(\"9781593277574\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"B1_ISBN\", response.books[0].isbn);\r",
+									"pm.collectionVariables.set(\"B2_ISBN\", response.books[1].isbn);\r",
+									"pm.collectionVariables.set(\"B3_ISBN\", response.books[2].isbn);\r",
+									"pm.collectionVariables.set(\"B4_ISBN\", response.books[3].isbn);\r",
+									"\r",
+									"let arr = [];\r",
+									"\r",
+									"for (item of response.books) {\r",
+									"    arr.push(item.isbn);\r",
+									"}\r",
+									"pm.collectionVariables.set(\"Books_ISBN\", arr);\r",
+									"console.log(arr);\r",
+									"\r",
+									"// let B1_ISBN = (response.books[0].isbn)\r",
+									"// let B2_ISBN = (response.books[1].isbn)\r",
+									"// let B3_ISBN = (response.books[2].isbn)\r",
+									"// let B4_ISBN = (response.books[3].isbn)\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/BookStore/v1/Books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"BookStore",
+								"v1",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Book1 to List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"const Books_ISBN = pm.variables.get(\"Books_ISBN\");\r",
+									"\r",
+									"pm.test(\"Validate Book ISBN\", () => {\r",
+									"  pm.expect(response.books[0].isbn).to.be.oneOf(Books_ISBN);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{U_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"{{U_Id}}\",\r\n  \"collectionOfIsbns\": [\r\n    {\r\n      \"isbn\": \"{{B1_ISBN}}\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/BookStore/v1/Books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"BookStore",
+								"v1",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Book2 to List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type value\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"const Books_ISBN = pm.variables.get(\"Books_ISBN\");\r",
+									"\r",
+									"pm.test(\"Validate Book ISBN\", () => {\r",
+									"  pm.expect(response.books[0].isbn).to.be.oneOf(Books_ISBN);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{U_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"{{U_Id}}\",\r\n  \"collectionOfIsbns\": [\r\n    {\r\n      \"isbn\": \"{{B2_ISBN}}\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/BookStore/v1/Books",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"BookStore",
+								"v1",
+								"Books"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Book of User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validating Connection\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{U_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isbn\": \"{{B1_ISBN}}\",\r\n  \"userId\": \"{{U_Id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/BookStore/v1/Book",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"BookStore",
+								"v1",
+								"Book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Book List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"pm.test(\"Validating Books ISBN, Title & Author\", function () {\r",
+									"    pm.expect(response.books[0].isbn).to.eql(\"9781449365035\");\r",
+									"    pm.expect(response.books[0].title).to.eql(\"Speaking JavaScript\");\r",
+									"    pm.expect(response.books[0].author).to.eql(\"Axel Rauschmayer\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{U_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": \"{{U_Id}}\",\r\n  \"isbn\": \"{{B4_ISBN}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/BookStore/v1/Books/{{B2_ISBN}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"BookStore",
+								"v1",
+								"Books",
+								"{{B2_ISBN}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Any Book Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var response = JSON.parse(responseBody);\r",
+									"pm.test(\"Validating Book ISBN\", response.isbn) == \"9781449337711\";\r",
+									"pm.test(\"Validating Book Title\", response.title) == \"Designing Evolvable Web APIs with ASP.NET\";\r",
+									"pm.test(\"Validating Book Author\", response.author) == \"Glenn Block et al.\";\r",
+									"pm.test(\"Validating Book Pages\", response.pages) == 238;"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/BookStore/v1/Book?ISBN={{B3_ISBN}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"BookStore",
+								"v1",
+								"Book"
+							],
+							"query": [
+								{
+									"key": "ISBN",
+									"value": "{{B3_ISBN}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validating Connection\", function () {\r",
+									"    pm.expect(pm.response.headers.get(\"Connection\")).to.eql(\"keep-alive\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{U_Token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/Account/v1/User/{{U_Id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"Account",
+								"v1",
+								"User",
+								"{{U_Id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": ""
+		},
+		{
+			"key": "U_Password",
+			"value": ""
+		},
+		{
+			"key": "U_Id",
+			"value": ""
+		},
+		{
+			"key": "U_Name",
+			"value": ""
+		},
+		{
+			"key": "U_Token",
+			"value": ""
+		},
+		{
+			"key": "B1_ISBN",
+			"value": ""
+		},
+		{
+			"key": "B2_ISBN",
+			"value": ""
+		},
+		{
+			"key": "B3_ISBN",
+			"value": ""
+		},
+		{
+			"key": "B4_ISBN",
+			"value": ""
+		},
+		{
+			"key": "Books_ISBN",
+			"value": ""
+		}
+	]
+}
